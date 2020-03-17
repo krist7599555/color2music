@@ -1,0 +1,45 @@
+{
+  "name": "color2music",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "sync": "rsync -r ./dist/* root@128.199.216.159:/var/www/color2music",
+    "deploy": "yarn build && yarn sync"
+  },
+  "dependencies": {
+    "@vue/composition-api": "^0.4.0",
+    "colorsys": "^1.0.22",
+    "core-js": "^3.6.4",
+    "jquery": "^3.4.1",
+    "lodash": "^4.17.15",
+    "pepjs": "^0.5.2",
+    "register-service-worker": "^1.6.2",
+    "rxjs": "^6.5.4",
+    "rxjs-compat": "^6.5.4",
+    "tailwindcss": "^1.2.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.5",
+    "vue-rx": "^6.2.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "@vue/cli-plugin-babel": "^4.2.0",
+    "@vue/cli-plugin-eslint": "^4.2.0",
+    "@vue/cli-plugin-pwa": "^4.2.0",
+    "@vue/cli-plugin-router": "^4.2.0",
+    "@vue/cli-plugin-typescript": "^4.2.0",
+    "@vue/cli-service": "^4.2.0",
+    "@vue/eslint-config-typescript": "^5.0.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.1.2",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
+    "typescript": "~3.7.5",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
