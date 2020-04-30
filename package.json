@@ -13,7 +13,7 @@
     "@vue/composition-api": "^0.4.0",
     "colorsys": "^1.0.22",
     "core-js": "^3.6.4",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "lodash": "^4.17.15",
     "pepjs": "^0.5.2",
     "register-service-worker": "^1.6.2",
