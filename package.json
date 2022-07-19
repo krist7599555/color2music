@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --dest docs",
     "lint": "vue-cli-service lint",
-    "sync": "rsync -r ./dist/* root@128.199.216.159:/var/www/color2music",
-    "deploy": "yarn build && yarn sync"
+    "build:githubpage": "pnpm i; pnpm run build"
   },
   "dependencies": {
     "@vue/composition-api": "^0.4.0",
@@ -26,6 +25,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
+    "@types/node": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
     "@vue/cli-plugin-babel": "^4.2.0",
