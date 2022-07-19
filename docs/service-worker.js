@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "https://krist7599555.github.com/color2music/precache-manifest.daad1addb61c35911900d25184d3efe2.js"
+  "https://krist7599555.github.io/color2music/precache-manifest.ba19b2052b8487f1d9216263edab62db.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "color2music"});
