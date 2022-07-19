@@ -3,5 +3,5 @@
 
 module.exports = {
   // options...
-  publicPath: "https://krist7599555.github.com/color2music/",
+  publicPath: "https://krist7599555.github.io/color2music/",
 };
