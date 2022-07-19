@@ -101,6 +101,7 @@ export default defineComponent({
     const disabled_sv_input = ref(false)
 
     onMounted(() => {
+      console.log("MOUNTED")
       // color input element
       const els = {
         h: colorH.value!,
