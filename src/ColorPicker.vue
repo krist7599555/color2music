@@ -70,150 +70,117 @@
   </div>
 </template>
 
-<script lang="ts">
-import { fromEvent, merge } from "rxjs";
-import { map, scan, startWith } from "rxjs/operators";
-import { defineComponent, ref, onMounted, reactive } from "vue";
-import * as _ from "lodash";
+<script setup lang="ts">
+import { fromEvent, merge, map, scan, startWith } from "rxjs";
+import { ref, onMounted, reactive } from "vue";
+import _ from "lodash";
 import * as colorsys from "colorsys";
-import { createHsvCanvas } from "./ColorPicker.lib";
 import $ from "jquery";
-console.log("$", $);
+import { createHsvCanvas } from "./ColorPicker.lib";
 
-export default defineComponent({
-  setup() {
-    const canvas = ref<HTMLCanvasElement>();
+const canvas = ref<HTMLCanvasElement>();
 
-    const colorH = ref<HTMLInputElement>();
-    const colorS = ref<HTMLInputElement>();
-    const colorV = ref<HTMLInputElement>();
-    const info = reactive({
-      logs: [] as (string | number)[],
-    });
-    function log(msg: string | number) {
-      info.logs = [msg, ...info.logs];
-    }
+const colorH = ref<HTMLInputElement>();
+const colorS = ref<HTMLInputElement>();
+const colorV = ref<HTMLInputElement>();
 
-    const colorHSV = reactive({
-      h: _.random(360),
-      s: _.random(40, 100),
-      v: _.random(40, 100),
-    });
-    const colorHEX = ref<string>();
-    const colorRGB = reactive({ r: 0, g: 0, b: 0 });
-
-    const disabled_sv_input = ref(false);
-
-    onMounted(() => {
-      console.log("MOUNTED");
-      // color input element
-      const els = {
-        h: colorH.value!,
-        s: colorS.value!,
-        v: colorV.value!,
-      };
-
-      // listen to color input element
-      const hsv_inputs = _.map(els, (el, field) =>
-        fromEvent(el, "input").pipe(
-          map((e) => (e.target as HTMLInputElement).value),
-          map((val: string) => ({ [field]: +val }))
-        )
-      );
-
-      // calculate color input to 3 format [hsv, hex, rgb]
-      const renderHSV$ = merge(...hsv_inputs).pipe(
-        startWith(colorHSV),
-        scan(_.assign, {})
-      );
-      const renderHEX$ = renderHSV$.pipe(map(colorsys.hsv2Hex));
-      const renderRGB$ = renderHEX$.pipe(map(colorsys.hex2Rgb));
-
-      // assign calculated value back to vue template
-      renderHSV$.subscribe((hsv) => _.assign(colorHSV, hsv));
-      renderHEX$.subscribe((hex) => _.assign(colorHEX, { value: hex }));
-      renderRGB$.subscribe((rgb) => _.assign(colorRGB, rgb));
-
-      // canvas
-      const reverse_v = true;
-      const canvas_el: HTMLCanvasElement = canvas.value!;
-      const canvas_size = _.max([canvas_el.height, canvas_el.width])!;
-
-      // if click on canvas ~> update HSV.s & HSV.v
-      $(canvas_el).on("pointerdown", (e) => {
-        disabled_sv_input.value = true;
-        const x = e.offsetX;
-        const y = e.offsetY;
-        const s = _.clamp(_.round((x / canvas_size) * 101), 0, 100);
-        let v = _.clamp(_.round((y / canvas_size) * 101), 0, 100);
-        if (reverse_v) v = 99 - v;
-        els.s.value = _.toString(s);
-        els.v.value = _.toString(v);
-        els.s.dispatchEvent(new Event("input"));
-        els.v.dispatchEvent(new Event("input"));
-      });
-
-      // if move on canvas ~> update HSV.h
-      merge(
-        fromEvent(canvas_el, "touchmove"),
-        fromEvent(canvas_el, "mousemove")
-      ).subscribe(() => {
-        // $(canvas_el).on("pointermove", () => {
-
-        if (disabled_sv_input.value) {
-          els.h.value = _.toString((colorHSV.h + 1) % 360);
-          els.h.dispatchEvent(new Event("input"));
-        }
-      });
-
-      // if not hover ~> reset state
-      $(canvas_el).on("pointerup", () => {
-        disabled_sv_input.value = false;
-      });
-
-      // rerender canvas if HSV.h is change
-      renderHSV$.pipe(map((e) => e.h)).subscribe((h) => {
-        const canvas_ctx = canvas_el.getContext("2d")!;
-        canvas_el.width = canvas_size;
-        canvas_el.height = canvas_size;
-        const bitmap_size = 6;
-        const canvas_bit = createHsvCanvas(
-          h,
-          bitmap_size,
-          reverse_v ? { v: -1 } : {}
-        );
-        canvas_ctx.scale(canvas_size / bitmap_size, canvas_size / bitmap_size);
-        canvas_ctx.drawImage(canvas_bit, 0, 0);
-      });
-    }); // ending onMounted
-
-    return {
-      // element
-      canvas,
-      colorH,
-      colorS,
-      colorV,
-
-      // state
-      colorHSV,
-      colorRGB,
-      colorHEX,
-      disabled_sv_input,
-
-      info,
-      fullscreen() {
-        const elem: any = document.documentElement;
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-          /* Firefox */
-          elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) {
-          /* Chrome, Safari and Opera */
-          elem.webkitRequestFullscreen();
-        }
-      },
-    };
-  },
+const colorHSV = reactive({
+  h: _.random(360),
+  s: _.random(40, 100),
+  v: _.random(40, 100),
 });
+const colorHEX = ref<string>();
+const colorRGB = reactive({ r: 0, g: 0, b: 0 });
+
+const disabled_sv_input = ref(false);
+
+onMounted(() => {
+  console.log("MOUNTED");
+  // color input element
+  const els = {
+    h: colorH.value!,
+    s: colorS.value!,
+    v: colorV.value!,
+  };
+
+  // listen to color input element
+  const hsv_inputs = _.map(els, (el, field) =>
+    fromEvent(el, "input").pipe(
+      map((e) => (e.target as HTMLInputElement).value),
+      map((val: string) => ({ [field]: +val }))
+    )
+  );
+
+  // calculate color input to 3 format [hsv, hex, rgb]
+  const renderHSV$ = merge(...hsv_inputs).pipe(
+    startWith(colorHSV),
+    scan(_.assign, {})
+  );
+  const renderHEX$ = renderHSV$.pipe(map(colorsys.hsv2Hex));
+  const renderRGB$ = renderHEX$.pipe(map(colorsys.hex2Rgb));
+
+  // assign calculated value back to vue template
+  renderHSV$.subscribe((hsv) => _.assign(colorHSV, hsv));
+  renderHEX$.subscribe((hex) => _.assign(colorHEX, { value: hex }));
+  renderRGB$.subscribe((rgb) => _.assign(colorRGB, rgb));
+
+  // canvas
+  const reverse_v = true;
+  const canvas_el: HTMLCanvasElement = canvas.value!;
+  const canvas_size = _.max([canvas_el.height, canvas_el.width])!;
+
+  // if click on canvas ~> update HSV.s & HSV.v
+  $(canvas_el).on("pointerdown", (e) => {
+    disabled_sv_input.value = true;
+    const x = e.offsetX!;
+    const y = e.offsetY!;
+    const s = _.clamp(_.round((x / canvas_size) * 101), 0, 100);
+    let v = _.clamp(_.round((y / canvas_size) * 101), 0, 100);
+    if (reverse_v) v = 99 - v;
+    els.s.value = _.toString(s);
+    els.v.value = _.toString(v);
+    els.s.dispatchEvent(new Event("input"));
+    els.v.dispatchEvent(new Event("input"));
+  });
+
+  // if move on canvas ~> update HSV.h
+  merge(
+    fromEvent(canvas_el, "touchmove"),
+    fromEvent(canvas_el, "mousemove")
+  ).subscribe(() => {
+    // $(canvas_el).on("pointermove", () => {
+
+    if (disabled_sv_input.value) {
+      els.h.value = _.toString((colorHSV.h + 1) % 360);
+      els.h.dispatchEvent(new Event("input"));
+    }
+  });
+
+  // if not hover ~> reset state
+  $(canvas_el).on("pointerup", () => {
+    disabled_sv_input.value = false;
+  });
+
+  // rerender canvas if HSV.h is change
+  renderHSV$.pipe(map((e) => e.h)).subscribe((h) => {
+    const canvas_ctx = canvas_el.getContext("2d")!;
+    canvas_el.width = canvas_size;
+    canvas_el.height = canvas_size;
+    const bitmap_size = 6;
+    const canvas_bit = createHsvCanvas(
+      h,
+      bitmap_size,
+      reverse_v ? { v: -1 } : {}
+    );
+    canvas_ctx.scale(canvas_size / bitmap_size, canvas_size / bitmap_size);
+    canvas_ctx.drawImage(canvas_bit, 0, 0);
+  });
+}); // ending onMounted
+
+function fullscreen() {
+  const elem: any = document.documentElement;
+  elem.requestFullscreen?.();
+  elem.mozRequestFullScreen?.();
+  elem.webkitRequestFullscreen?.();
+}
 </script>

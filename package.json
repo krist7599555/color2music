@@ -24,6 +24,7 @@
     "vue-rx": "^6.2.0"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.14",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
