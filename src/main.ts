@@ -1,23 +1,17 @@
-import Vue from 'vue'
-import App from './App.vue'
-// import './registerServiceWorker'
-import router from './router'
-import VueCompositionApi from '@vue/composition-api'
+import { createApp } from "vue";
+import App from "./App.vue";
+import "./index.css";
 
-Vue.use(VueCompositionApi)
+createApp(App).mount("#app");
+// // import './registerServiceWorker'
+// import router from "./router";
+// import VueCompositionApi from "@vue/composition-api";
 
-import "pepjs" // pointer jquery
-import "jquery" // pointer jquery
+// Vue.use(VueCompositionApi);
 
-// import Rx from 'rxjs/Rx'
-// import VueRx from 'vue-rx'
-// Vue.use(VueRx, Rx)
+import "pepjs"; // pointer jquery
+import "jquery"; // pointer jquery
 
-import './assets/css/tailwind.css'
-
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  render: h => h(App),
-}).$mount('#app')
+// // import Rx from 'rxjs/Rx'
+// // import VueRx from 'vue-rx'
+// // Vue.use(VueRx, Rx)
